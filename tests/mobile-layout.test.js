@@ -37,18 +37,25 @@ test("shared script initializes and closes the mobile navigation", () => {
     assert.match(script, /mobile-nav-ready/);
 });
 
-test("portrait CSS shows mobile guidance without affecting landscape desktop layout", () => {
+test("portrait CSS shows the requested landscape guidance", () => {
     const css = read("css/style.css");
     assert.doesNotMatch(css, /@media \(max-width: 720px\) \{`r`n/);
     assert.match(css, /@media \(max-width: 920px\) and \(orientation: portrait\)[\s\S]*?body::before/);
-    assert.match(css, /@media \(max-width: 920px\) and \(orientation: portrait\)[\s\S]*?body::after[\s\S]*?content:\s*"[^"]*横屏[^"]*"/);
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: portrait\)[\s\S]*?body::after[\s\S]*?content:\s*"请将手机横屏浏览更舒适"/);
     assert.match(
         css,
         /@media \(max-width: 780px\) and \(orientation: portrait\)[\s\S]*?\.home-showcase-bg \.hero\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*1fr\)/
     );
-    assert.match(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?body\s*\{[\s\S]*?min-width:\s*1180px/);
     assert.match(css, /\.nav-toggle\s*\{/);
     assert.match(css, /\.navbar\.is-nav-open \.nav-links/);
+});
+
+test("phone landscape keeps the desktop canvas scaled fully into view", () => {
+    const css = read("css/style.css");
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?html\s*\{[\s\S]*?overflow-x:\s*hidden/);
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?body\s*\{[\s\S]*?width:\s*1180px/);
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?body\s*\{[\s\S]*?zoom:\s*calc\(100vw\s*\/\s*1180\)/);
+    assert.doesNotMatch(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?overflow-x:\s*auto/);
 });
 
 test("narrow CSS is portrait-only so phone landscape uses desktop layout", () => {

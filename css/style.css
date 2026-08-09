@@ -7193,13 +7193,16 @@ body.service-page {
 }
 
 @media (max-width: 920px) and (orientation: landscape) {
-    html,
-    body {
-        min-width: 1180px;
+    html {
+        overflow-x: hidden;
     }
 
     body {
-        overflow-x: auto;
+        width: 1180px;
+        min-width: 1180px;
+        max-width: 1180px;
+        overflow-x: hidden;
+        zoom: calc(100vw / 1180);
     }
 
     .nav-toggle {
@@ -7220,7 +7223,7 @@ body.service-page {
     }
 
     body::after {
-        content: "请将手机横屏浏览\\A横屏后会按电脑页面显示";
+        content: "请将手机横屏浏览更舒适";
         position: fixed;
         left: 50%;
         top: 50%;
