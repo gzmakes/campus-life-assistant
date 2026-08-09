@@ -17,6 +17,8 @@
             return;
         }
 
+        navbar.classList.add("mobile-nav-ready");
+
         function closeMenu() {
             navbar.classList.remove("is-nav-open");
             toggle.setAttribute("aria-expanded", "false");
