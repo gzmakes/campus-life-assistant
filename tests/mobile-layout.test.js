@@ -34,22 +34,30 @@ test("shared script initializes and closes the mobile navigation", () => {
     assert.match(script, /aria-expanded/);
     assert.match(script, /Escape/);
     assert.match(script, /is-nav-open/);
+    assert.match(script, /mobile-nav-ready/);
 });
 
-test("mobile CSS overrides the high-specificity home hero grid", () => {
+test("portrait CSS shows mobile guidance without affecting landscape desktop layout", () => {
     const css = read("css/style.css");
     assert.doesNotMatch(css, /@media \(max-width: 720px\) \{`r`n/);
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: portrait\)[\s\S]*?body::before/);
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: portrait\)[\s\S]*?body::after[\s\S]*?content:\s*"[^"]*横屏[^"]*"/);
     assert.match(
         css,
-        /@media \(max-width: 780px\)[\s\S]*?\.home-showcase-bg \.hero\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*1fr\)/
+        /@media \(max-width: 780px\) and \(orientation: portrait\)[\s\S]*?\.home-showcase-bg \.hero\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*1fr\)/
     );
+    assert.match(css, /@media \(max-width: 920px\) and \(orientation: landscape\)[\s\S]*?body\s*\{[\s\S]*?min-width:\s*1180px/);
     assert.match(css, /\.nav-toggle\s*\{/);
     assert.match(css, /\.navbar\.is-nav-open \.nav-links/);
 });
 
-test("mobile CSS covers page-specific single-column layouts", () => {
+test("narrow CSS is portrait-only so phone landscape uses desktop layout", () => {
     const css = read("css/style.css");
-    const mobileOverrideStart = css.lastIndexOf("@media (max-width: 780px)");
+    const bareNarrowQueries = [...css.matchAll(/@media \(max-width: (430|680|720|780|1180)px\)(?! and \(orientation: portrait\))/g)]
+        .map((match) => match[0]);
+    assert.deepEqual(bareNarrowQueries, []);
+
+    const mobileOverrideStart = css.lastIndexOf("@media (max-width: 780px) and (orientation: portrait)");
     assert.notEqual(mobileOverrideStart, -1);
 
     for (const selector of [

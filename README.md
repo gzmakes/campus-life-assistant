@@ -5,7 +5,7 @@
 在线体验：
 
 - 智能体完整版：<https://campus-life-assistant.vercel.app>
-- GitHub Pages 静态版：<https://hi-bro2026.github.io/campus-life-assistant/>
+- GitHub Pages 静态版：<https://gzmakes.github.io/campus-life-assistant/>
 
 ## 项目定位
 
